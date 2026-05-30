@@ -64,3 +64,5 @@ npm run dev
 - The Express app is configured to serve static files from `public/`.
 - The database name is defined in `src/constants.js` as `firstdb`.
 - The application uses ES module syntax with `type: "module"` enabled in `package.json`.
+
+# Model link - https://app.eraser.io/workspace/T8aZU3amCvSBePO4gxeb?origin=share
