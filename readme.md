@@ -104,4 +104,57 @@ npm run dev
 - Static files are served from `public/`.
 - The database name is defined in `src/constants.js` as `firstdb`.
 
+## Project Overview
+
+This project is a full-stack backend foundation built with Node.js, Express, MongoDB, and common middleware. It is structured to help you learn how a modern backend is organized and how the main pieces interact.
+
+### Project Structure
+
+- `.gitignore`
+- `.prettierignore`
+- `.prettierrc`
+- `env` (environment variables file; not committed)
+- `package.json`
+- `package-lock.json`
+- `readme.md`
+- `public/`
+  - `temp/`
+    - `.gitkeep`
+- `src/`
+  - `app.js`
+  - `constants.js`
+  - `index.js`
+  - `db/`
+    - `index.js`
+  - `middleware/`
+    - `multer.middleware.js`
+  - `models/`
+    - `user.model.js`
+    - `video.model.js`
+  - `utils/`
+    - `ApiError.js`
+    - `ApiResponse.js`
+    - `asyncHandler.js`
+    - `cloudinary.js`
+
+### Installed Dependencies
+
+#### Runtime dependencies
+
+- `bcrypt` - password hashing
+- `cloudinary` - media upload and management
+- `cookie-parser` - HTTP cookie parsing
+- `cors` - Cross-Origin Resource Sharing support
+- `dotenv` - environment variable loading
+- `express` - web server framework
+- `jsonwebtoken` - JWT access/refresh token handling
+- `mongoose` - MongoDB object modeling
+- `mongoose-aggregate-paginate-v2` - pagination helper for Mongoose aggregation pipelines
+- `multer` - file upload handling
+
+#### Development dependencies
+
+- `nodemon` - development server reloading
+- `prettier` - code formatting
+
 If you'd like, I can also generate a `CONTRIBUTING.md` and add examples for common routes (auth, upload, list videos).
