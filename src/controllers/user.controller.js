@@ -13,6 +13,25 @@ import { ApiResponse } from '../utils/ApiResponse.js';
 // remove password and refresh token from field
 // check if user is created / check if not null
 
+// create method for generating access and refresh token
+const generateAccessAndRefreshToken = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+
+    const accessToken = await user.generateAccessToken();
+    const refreshToken = await user.generateRefreshToken();
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    return { accessToken, refreshToken };
+  } catch (error) {
+    throw new ApiError(
+      500,
+      'Something went wrong while generating access and refresh tokens',
+    );
+  }
+};
 const registerUser = asyncHandler(async (req, res) => {
   const { username, fullName, email, password } = req.body;
 
@@ -91,9 +110,31 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   // generate access and refresh token
-  const accessToken = await user.generateAccessToken();
-  const refreshToken = await user.generateRefreshToken();
-  user.refreshToken = refreshToken;
-  await user.save({ validateBeforeSave: false });
+  const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+    user._id,
+  );
+
+  // remove password from the user beofore sending cookies
+  const loggedInUser = await User.findById(user._id).select(
+    '-password -refreshToken',
+  );
+
+  //send cookies
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  res
+    .status(200)
+    .cookie('refreshToken', refreshToken, options)
+    .cookie('accesstoken', accessToken, options)
+    .json(
+      new ApiResponse(
+        200,
+        { user: loggedInUser, accessToken, refreshToken },
+        'User Loggedin successfully',
+      ),
+    );
 });
-export { registerUser };
+export { registerUser, loginUser };
