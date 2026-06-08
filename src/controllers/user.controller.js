@@ -70,5 +70,30 @@ const registerUser = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, createdUser, 'User registered successfully'));
 });
+const loginUser = asyncHandler(async (req, res) => {
+  // get data form req.body
+  const { username, email, password } = req.body;
+  if (!email && !username) {
+    throw new ApiError(400, 'Please provide username or email');
+  }
 
+  // find the user in the db
+  const user = await User.findOne({
+    $or: [{ username }, { email }],
+  });
+  if (!user) {
+    throw new ApiError(400, 'User not found');
+  }
+  // check password using bcrypt.compare
+  const isPasswordValid = await user.isPasswordCorrect(password);
+  if (!isPasswordValid) {
+    throw new ApiError(401, 'Password wrong');
+  }
+
+  // generate access and refresh token
+  const accessToken = await user.generateAccessToken();
+  const refreshToken = await user.generateRefreshToken();
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
+});
 export { registerUser };
