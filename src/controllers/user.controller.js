@@ -437,4 +437,6 @@ export {
   updateAccountDetails,
   changeUserAvatar,
   changeUserCoverImage,
+  getUserChannelProfile,
+  getWatchHistory,
 };
